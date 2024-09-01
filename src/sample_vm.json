@@ -1,0 +1,9 @@
+{
+  "weights": {
+    "p_watch_3s": 0.1,
+    "p_watch_30s": 0.3,
+    "p_watch_and_share": 20,
+    "p_watch_and_like": 2,
+    "p_watch_and_follow": 5
+  }
+}
