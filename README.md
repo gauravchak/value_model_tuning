@@ -94,7 +94,7 @@ Key features:
 
 3. **Regret Calculation**: For each task, we calculate the regret as 1 - the nDCG between the base ranking and the per-task optimal ranking. The nDCG represents how aligned the current ranking is with the optimal ranking for that task. Hence 1 - nDCG represents the regret.
 
-4. **Optimization**: The algorithm adjusts weights to achieve desired regret fractions for each task, effectively tuning the importance of each component in the value model.
+4. **Optimization**: The algorithm adjusts weights based on the importance adjusted by the regret of that task, effectively tuning the importance of each component in the value model.
 
 ### Status
 
@@ -105,10 +105,10 @@ python regret_targeting.py
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
-  Regrets for each task: ['0.093', '0.135', '0.025', '0.023', '0.019']
-  Current regret fractions: ['0.315', '0.458', '0.084', '0.079', '0.064']
-  Desired regret fractions: ['0.300', '0.500', '0.070', '0.070', '0.060']
-Optimized weights: ['0.369', '0.000', '0.330', '0.211', '0.090']
+  Regrets for each task: ['0.101', '0.045', '0.050', '0.034', '0.029']
+  Current regret gaps: ['0.030', '0.023', '0.004', '0.002', '0.002']
+
+Optimized weights: ['0.500', '0.374', '0.058', '0.039', '0.029']
 ```
 
 ## Usage

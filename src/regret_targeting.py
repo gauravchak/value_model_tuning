@@ -15,7 +15,7 @@ from sklearn.metrics import ndcg_score as sklearn_ndcg_score
 # pylint: disable=W0621
 def optimize_weights(
     data: list[list[float]],
-    desired_regret_fractions: list[float],
+    regret_importances: list[float],
     max_iterations: int = 1000,
     learning_rate: float = 0.1,
     tolerance: float = 1e-6,
@@ -32,7 +32,7 @@ def optimize_weights(
     data (list[list[float]]): A 2D list or array where each row represents an item
                               and each column represents a task. Values are scores
                               or relevance measures for each item-task pair.
-    desired_regret_fractions (list[float]): A list of desired regret fractions for
+    regret_importances (list[float]): A list of desired regret fractions for
                                             each task. Must sum to 1.
     max_iterations (int, optional): Maximum number of optimization iterations.
                                     Defaults to 1000.
@@ -60,12 +60,12 @@ def optimize_weights(
     """
     data = np.array(data)
     N, T = data.shape
-    desired_regret_fractions = np.array(desired_regret_fractions)
+    regret_importances = np.array(regret_importances)
 
-    assert len(desired_regret_fractions) == T, (
+    assert len(regret_importances) == T, (
         "Number of tasks and desired regret fractions must match"
     )
-    assert np.isclose(sum(desired_regret_fractions), 1), (
+    assert np.isclose(sum(regret_importances), 1), (
         "Desired regret fractions must sum to 1"
     )
 
@@ -91,19 +91,23 @@ def optimize_weights(
             )
             regrets.append(1 - ndcg)
 
-        # Compute current regret fractions
-        current_regret_fractions = np.array(regrets) / np.maximum(
-            0.001, np.sum(regrets)
-        )
+        # Ensure regrets are non-negative
+        regrets = np.maximum(regrets, 0)
 
-        # Compute the difference and update weights
-        diff = desired_regret_fractions - current_regret_fractions
-        # If the difference is negative, the current regret fraction is
-        # too high. Hence the current ranking is not giving enough weight
-        # to this particular task. So we need to increase the weight of
-        # this task.
-        # Hence we subtract the difference from the current weights.
-        weights -= learning_rate * diff
+        # Compute the weighted sum of regrets
+        weighted_sum_of_regrets = np.dot(regrets, regret_importances)
+
+        # Compute the gradient of the weighted sum of regrets
+        gradient = regret_importances * regrets
+
+        # Update weights
+        # If regret * desired_regret_fraction is high for a task, this means
+        # that the current ranking is quite different from what is optimal
+        # for that task and the importance of this task is high. To remedy
+        # this, we need to increase the weight of this task. Upon doing
+        # so, the regret for this task will decrease, and the weighted sum
+        # of regrets will also decrease.
+        weights += learning_rate * gradient
 
         # Ensure weights are non-negative and sum to 1
         weights = np.maximum(weights, 0)
@@ -113,18 +117,17 @@ def optimize_weights(
         if verbose >= 2:
             if iteration % max(1, max_iterations // 10) == 0:
                 print(f"Iteration {iteration}:")
+                current_regret_gaps = np.array(regrets) * np.array(
+                    regret_importances
+                )
                 print(
-                    "  Current regret fractions:",
-                    [f"{frac:.3f}" for frac in current_regret_fractions]
+                    "  Current regrets:",
+                    [f"{frac:.3f}" for frac in regrets]
                 )
                 print("  Updated weights:",
                       [f"{weight:.3f}" for weight in weights])
-                print("  Differences:", [f"{d:.3f}" for d in diff])
-
-        # Check for convergence
-        if np.all(np.abs(diff) < tolerance):
-            print(f"Converged after {iteration + 1} iterations")
-            break
+                print("  Weighted sum of regrets:",
+                      f"{weighted_sum_of_regrets:.3f}")
 
     # Final debug information
     if verbose >= 1:
@@ -133,13 +136,12 @@ def optimize_weights(
             "  Regrets for each task:",
             [f"{regret:.3f}" for regret in regrets]
         )
-        print(
-            "  Current regret fractions:",
-            [f"{frac:.3f}" for frac in current_regret_fractions]
+        current_regret_gaps = np.array(regrets) * np.array(
+            regret_importances
         )
         print(
-            "  Desired regret fractions:",
-            [f"{frac:.3f}" for frac in desired_regret_fractions]
+            "  Current regret gaps:",
+            [f"{frac:.3f}" for frac in current_regret_gaps]
         )
         print("  Optimized weights:", [f"{weight:.3f}" for weight in weights])
 
@@ -152,16 +154,16 @@ means = [0.01, 0.02, 0.05, 0.10, 0.15]
 data = np.clip(
     np.abs(np.random.normal(loc=means, scale=0.01, size=(100, 5))), 0, 0.99
 )
-desired_regret_fractions = [0.3, 0.5, 0.07, 0.07, 0.06]
+regret_importances = [0.3, 0.5, 0.07, 0.07, 0.06]
 initial_weights = [0.2, 0.2, 0.2, 0.2, 0.2]  # Start with equal weights
 print("Initial weights:",
       [f"{weight:.3f}" for weight in initial_weights])
 optimized_weights = optimize_weights(
     data=data,
-    desired_regret_fractions=desired_regret_fractions,
-    max_iterations=1000,
+    regret_importances=regret_importances,
+    max_iterations=3000,
     learning_rate=0.03,
-    verbose=1,
+    verbose=2,
     initial_weights=initial_weights
 )
 print("Optimized weights:", [f"{weight:.3f}" for weight in optimized_weights])
