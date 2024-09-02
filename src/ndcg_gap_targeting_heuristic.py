@@ -131,7 +131,7 @@ print("Initial weights:",
 optimized_weights = optimize_weights(
     data=data,
     desired_ndcg_fractions=desired_ndcg_fractions,
-    max_iterations=300,
+    max_iterations=1000,
     learning_rate=0.05,
     tolerance=1e-5,
     verbose=1,
