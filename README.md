@@ -22,9 +22,24 @@ This repository provides tools to compute optimal weights for a linear value mod
 The `ndcg_targeting_v1.py` script optimizes value model weights to target specific NDCG (Normalized Discounted Cumulative Gain) drops from base ranking on zeroing out the weights for each task. It uses gradient descent to find weights that produce NDCG scores close to the desired targets.
 
 Key features:
+
 - Supports multiple tasks with individual NDCG targets
 - Configurable learning rate and number of iterations
 - Outputs optimized weights for each task
+
+### How NDCG Targeting Works
+
+1. **Base Ranking**: First, we compute a base ranking using all task weights:
+
+   ![Base Ranking](images/Weighted_sum_ranked_list.png)
+
+2. **Task-Ignored Ranking**: For each task, we compute a new ranking by setting its weight to zero:
+
+   ![Task-Ignored Ranking](images/Task_ignored_ranked_list.png)
+
+3. **NDCG Delta**: We calculate the NDCG difference between the base ranking and each task-ignored ranking. This delta represents the importance of each task.
+
+4. **Optimization**: The algorithm adjusts weights to achieve desired NDCG deltas for each task, effectively tuning the importance of each component in the value model.
 
 ### Supports both Black-box and Explicit Optimizations
 
@@ -59,11 +74,28 @@ Optimized weights: ['0.269', '0.354', '0.137', '0.143', '0.098']
 The [regret_targeting.py](./src/regret_targeting.py) script takes a different approach. For each task, it looks at the ranking to optimize that task. Then it defines regret as the nDCG between the optimized weights ranking and the per-rask optimal ranking. The script has been provided a target regret ratio/fraction between tasks, and it finds the weights that produce this regret. This can be useful for balancing multiple competing objectives.
 
 Key features:
+
 - Minimizes regret across multiple tasks
 - Configurable regularization to prevent overfitting
 - Outputs optimized weights that balance task importance
 
-Status: Works fine. As you can see from the output below, the relative regrest values, i.e. "Current regret fractions" are pretty close to the desired fractions.
+### How Regret Targeting Works
+
+1. **Per Task Rankings**: First, we compute a per-task ranking using only the weights for that task:
+
+   ![Per Task Rankings](images/per_task_ranked_lists.png)
+
+2. **Current Ranking**: Then, we compute a ranking using the current task weights:
+
+   ![Current Ranking](images/Weighted_sum_ranked_list.png)
+
+3. **Regret Calculation**: For each task, we calculate the regret as 1 - the nDCG between the base ranking and the per-task optimal ranking. The nDCG represents how aligned the current ranking is with the optimal ranking for that task. Hence 1 - nDCG represents the regret.
+
+4. **Optimization**: The algorithm adjusts weights to achieve desired regret fractions for each task, effectively tuning the importance of each component in the value model.
+
+### Status
+
+Works fine. As you can see from the output below, the relative regrest values, i.e. "Current regret fractions" are pretty close to the desired fractions.
 
 ```text
 python regret_targeting.py
