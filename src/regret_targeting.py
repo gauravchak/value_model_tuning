@@ -163,7 +163,7 @@ optimized_weights = optimize_weights(
     regret_importances=regret_importances,
     max_iterations=3000,
     learning_rate=0.03,
-    verbose=2,
+    verbose=1,
     initial_weights=initial_weights
 )
 print("Optimized weights:", [f"{weight:.3f}" for weight in optimized_weights])
