@@ -14,12 +14,13 @@ This repository provides tools to compute optimal weights for a linear value mod
 ## Contents
 
 - [sample_vm.json](./src/sample_vm.json): Example value model configuration
-- [ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py): NDCG-based weight optimization 
+- [ndcg_gap_targeting_heuristic.py](./src/ndcg_gap_targeting_heuristic.py): NDCG-Gap-based weight optimization using a heuristic approach
+- [ndcg_gap_targeting_slsqp.py](./src/ndcg_gap_targeting_slsqp.py): NDCG-Gap-based weight optimization using SLSQP
 - [regret_targeting.py](./src/regret_targeting.py): Regret-based weight optimization
 
-## NDCG Targeting
+## NDCG Gap Targeting
 
-The `ndcg_targeting_v1.py` script optimizes value model weights to target specific NDCG (Normalized Discounted Cumulative Gain) drops from base ranking on zeroing out the weights for each task. It uses gradient descent to find weights that produce NDCG scores close to the desired targets.
+The `ndcg_gap_targeting_heuristic.py` script optimizes value model weights to target specific NDCG (Normalized Discounted Cumulative Gain) drops from base ranking on zeroing out the weights for each task. It uses gradient descent to find weights that produce NDCG scores close to the desired targets.
 
 Key features:
 
@@ -43,7 +44,7 @@ Key features:
 
 ### Supports both Black-box and Explicit Optimizations
 
-[ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py) uses a white-box optimization approach whereas [ndcg_targeting.py](./src/ndcg_targeting.py) uses SLSQP to optimize the weights. I believe the latter should be more accurate, but for whatever reason it's not working as well as I'd hoped. Currently, the SLSQP approach is terminating without converging.
+[ndcg_gap_targeting_heuristic.py](./src/ndcg_gap_targeting_heuristic.py) uses a white-box/heuristic optimization approach whereas [ndcg_gap_targeting_slsqp.py](./src/ndcg_gap_targeting_slsqp.py) uses SLSQP to optimize the weights. I believe the latter should be more accurate, but for whatever reason it's not working as well as I'd hoped. Currently, the SLSQP approach is terminating without converging.
 
 ```md
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
