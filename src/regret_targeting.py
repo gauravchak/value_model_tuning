@@ -130,18 +130,18 @@ def optimize_weights(
     if verbose >= 1:
         print("\nFinal results:")
         print(
-            "Regrets for each task:",
+            "  Regrets for each task:",
             [f"{regret:.3f}" for regret in regrets]
         )
         print(
-            "Current regret fractions:",
+            "  Current regret fractions:",
             [f"{frac:.3f}" for frac in current_regret_fractions]
         )
         print(
-            "Desired regret fractions:",
+            "  Desired regret fractions:",
             [f"{frac:.3f}" for frac in desired_regret_fractions]
         )
-        print("Optimized weights:", [f"{weight:.3f}" for weight in weights])
+        print("  Optimized weights:", [f"{weight:.3f}" for weight in weights])
 
     return weights
 

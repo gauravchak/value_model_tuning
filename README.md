@@ -4,6 +4,7 @@ nDCG and regret based tools to find value model weights
 Value models (also known as multi-task fusion models) are a common component in modern recommender systems. They take estimates from the final ranking model for different tasks and combine them to create the final ranked list of recommendations.
 
 For more background on value models in recommender systems, see:
+
 - [Multi-Task Fusion via Reinforcement Learning for Long-Term User Satisfaction in Recommender Systems](https://arxiv.org/abs/2208.04560)
 - [Ranking model calibration in recommender systems](https://recsysml.substack.com/p/ranking-model-calibration-in-recommender)
 
@@ -17,7 +18,7 @@ This repository provides tools to compute optimal weights for a linear value mod
 
 ## NDCG Targeting
 
-The `ndcg_targeting_v1.py` script optimizes value model weights to target specific NDCG (Normalized Discounted Cumulative Gain) values for each task. It uses gradient descent to find weights that produce NDCG scores close to the desired targets.
+The `ndcg_targeting_v1.py` script optimizes value model weights to target specific NDCG (Normalized Discounted Cumulative Gain) drops from base ranking on zeroing out the weights for each task. It uses gradient descent to find weights that produce NDCG scores close to the desired targets.
 
 Key features:
 - Supports multiple tasks with individual NDCG targets
@@ -25,8 +26,10 @@ Key features:
 - Outputs optimized weights for each task
 
 ### Supports both Black-box and Explicit Optimizations
+
 [ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py) uses a white-box optimization approach whereas [ndcg_targeting.py](./src/ndcg_targeting.py) uses SLSQP to optimize the weights. I believe the latter should be more accurate, but for whatever reason it's not working as well as I'd hoped. Currently, the SLSQP approach is terminating without converging.
-```
+
+```md
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
@@ -37,8 +40,10 @@ Final results:
   Optimization message: Optimization terminated successfully
 Optimized weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 ```
+
 whereas the white-box approach works as expected:
-```
+
+```md
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
@@ -48,7 +53,7 @@ Final results:
 Optimized weights: ['0.269', '0.354', '0.137', '0.143', '0.098']
 ```
 
-## Regret Targeting 
+## Regret Targeting
 
 The [regret_targeting.py](./src/regret_targeting.py) script takes a different approach. For each task, it looks at the ranking to optimize that task. Then it defines regret as the nDCG between the optimized weights ranking and the per-rask optimal ranking. The script has been provided a target regret ratio/fraction between tasks, and it finds the weights that produce this regret. This can be useful for balancing multiple competing objectives.
 
@@ -56,6 +61,19 @@ Key features:
 - Minimizes regret across multiple tasks
 - Configurable regularization to prevent overfitting
 - Outputs optimized weights that balance task importance
+
+Status: Works fine. As you can see from the output below, the relative regrest values, i.e. "Current regret fractions" are pretty close to the desired fractions.
+
+```text
+python regret_targeting.py
+Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
+
+Final results:
+  Regrets for each task: ['0.093', '0.135', '0.025', '0.023', '0.019']
+  Current regret fractions: ['0.315', '0.458', '0.084', '0.079', '0.064']
+  Desired regret fractions: ['0.300', '0.500', '0.070', '0.070', '0.060']
+Optimized weights: ['0.369', '0.000', '0.330', '0.211', '0.090']
+```
 
 ## Usage
 

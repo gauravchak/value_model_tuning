@@ -136,16 +136,16 @@ def optimize_weights_slsqp(
 
     # Print final results
     print("\nFinal results:")
-    print("nDCG regrets for each task ignored:",
+    print("  nDCG regrets for each task ignored:",
           [f"{regret:.3f}" for regret in ndcg_regrets])
-    print("Current fractions:",
+    print("  Current fractions:",
           [f"{frac:.3f}" for frac in current_ndcg_fractions])
-    print("Desired fractions:",
+    print("  Desired fractions:",
           [f"{frac:.3f}" for frac in desired_ndcg_fractions])
-    print("Optimized weights:",
+    print("  Optimized weights:",
           [f"{weight:.3f}" for weight in optimized_weights])
-    print("Optimization success:", result.success)
-    print("Optimization message:", result.message)
+    print("  Optimization success:", result.success)
+    print("  Optimization message:", result.message)
 
     return optimized_weights
 
