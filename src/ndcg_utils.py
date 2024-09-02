@@ -1,3 +1,13 @@
+"""
+This script contains utility functions for computing nDCG.
+
+To run the script, use the following command:
+
+```bash
+python ndcg_utils.py
+```
+"""
+
 import numpy as np
 from sklearn.metrics import ndcg_score as sklearn_ndcg_score
 

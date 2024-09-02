@@ -1,5 +1,11 @@
 """
 This script contains the implementation of the nDCG targeting algorithm.
+
+To run the script, use the following command:
+
+```bash
+python ndcg_targeting_v1.py
+```
 """
 
 import numpy as np

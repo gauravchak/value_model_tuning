@@ -1,3 +1,13 @@
+"""
+This script contains the implementation of the regret targeting algorithm.
+
+To run the script, use the following command:
+
+```bash
+python regret_targeting.py
+```
+"""
+
 import numpy as np
 from sklearn.metrics import ndcg_score as sklearn_ndcg_score
 
@@ -142,12 +152,15 @@ data = np.clip(
     np.abs(np.random.normal(loc=means, scale=0.01, size=(100, 5))), 0, 0.99
 )
 desired_regret_fractions = [0.3, 0.5, 0.07, 0.07, 0.06]
+initial_weights = [0.2, 0.2, 0.2, 0.2, 0.2]  # Start with equal weights
+print("Initial weights:",
+      [f"{weight:.3f}" for weight in initial_weights])
 optimized_weights = optimize_weights(
     data=data,
     desired_regret_fractions=desired_regret_fractions,
     max_iterations=1000,
     learning_rate=0.03,
     verbose=1,
-    initial_weights=[0.2, 0.2, 0.2, 0.2, 0.2]  # Start with equal weights
+    initial_weights=initial_weights
 )
 print("Optimized weights:", [f"{weight:.3f}" for weight in optimized_weights])

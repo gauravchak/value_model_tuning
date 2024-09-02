@@ -25,7 +25,28 @@ Key features:
 - Outputs optimized weights for each task
 
 ### Supports both Black-box and Explicit Optimizations
-[ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py) uses a white-box optimization approach. 
+[ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py) uses a white-box optimization approach whereas [ndcg_targeting.py](./src/ndcg_targeting.py) uses SLSQP to optimize the weights. I believe the latter should be more accurate, but for whatever reason it's not working as well as I'd hoped. Currently, the SLSQP approach is terminating without converging.
+```
+Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
+
+Final results:
+  nDCG regrets for each task ignored: ['0.003', '0.002', '0.002', '0.002', '0.004']
+  Current fractions: ['0.207', '0.183', '0.115', '0.180', '0.315']
+  Desired fractions: ['0.300', '0.500', '0.070', '0.070', '0.060']
+  Optimization success: True
+  Optimization message: Optimization terminated successfully
+Optimized weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
+```
+whereas the white-box approach works as expected:
+```
+Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
+
+Final results:
+  nDCGs for each task ignored: ['0.994', '0.990', '0.999', '0.999', '0.999']
+  Current fractions: ['0.296', '0.504', '0.069', '0.073', '0.059']
+  Desired fractions: ['0.300', '0.500', '0.070', '0.070', '0.060']
+Optimized weights: ['0.269', '0.354', '0.137', '0.143', '0.098']
+```
 
 ## Regret Targeting 
 
@@ -38,7 +59,7 @@ Key features:
 
 ## Usage
 
-[Add specific usage instructions for running the scripts]
+There are examples of usage in each script's docstrings and at the bottom of each script. Commands to run each script are provided in the docstrings.
 
 ## Contributing
 
