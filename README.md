@@ -46,7 +46,8 @@ Key features:
 
 [ndcg_gap_targeting_heuristic.py](./src/ndcg_gap_targeting_heuristic.py) uses a white-box/heuristic optimization approach whereas [ndcg_gap_targeting_slsqp.py](./src/ndcg_gap_targeting_slsqp.py) uses SLSQP to optimize the weights. I believe the latter should be more accurate, but for whatever reason it's not working as well as I'd hoped. Currently, the SLSQP approach is terminating without converging.
 
-```md
+```text
+python ndcg_gap_targeting_slsqp.py
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
@@ -60,7 +61,8 @@ Optimized weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 whereas the white-box approach works as expected:
 
-```md
+```text
+python ndcg_gap_targeting_heuristic.py
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
