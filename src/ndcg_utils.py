@@ -31,8 +31,11 @@ def custom_ndcg_score(y_true, y_score, k=None):
     """
     if k is None:
         k = len(y_true)
+    # Sort the predicted scores in descending order to get the ranking
     order = np.argsort(y_score)[::-1]
+    # Take the top k elements from the true relevance scores
     y_true = np.take(y_true, order[:k])
+    # Calculate the best possible DCG at rank k
     best = dcg_at_k(sorted(y_true, reverse=True), k)
     actual = dcg_at_k(y_true, k)
     return actual / best if best > 0 else 0
@@ -41,19 +44,29 @@ def custom_ndcg_score(y_true, y_score, k=None):
 # Example case
 relevance_scores = np.array([1, 2, 3])  # True relevance scores (higher is more relevant)
 predicted_scores = np.array([3, 10, 5])  # Predicted relevance scores by the model
+ndcg_k: int = 3
 
 # Explanation of the example:
 # We have 3 items with true relevance scores [1, 2, 3]
 # The model predicted scores [3, 10, 5] for these items
-# The goal is to see how well the predicted scores rank the items compared to their true relevance
+# The goal is to see how well the predicted scores rank the items compared to
+# their true relevance
 
 # Calculate nDCG score using custom implementation
-custom_result = custom_ndcg_score(relevance_scores, predicted_scores)
-print(f"Custom nDCG score: {custom_result:.4f}")
+custom_result = custom_ndcg_score(
+    y_true=relevance_scores,
+    y_score=predicted_scores,
+    k=ndcg_k,
+)
+print(f"Custom nDCG score: {custom_result:.3f}")
 
 # Calculate nDCG score using sklearn implementation
-sklearn_result = sklearn_ndcg_score([relevance_scores], [predicted_scores])
-print(f"sklearn nDCG score: {sklearn_result:.4f}")
+sklearn_result = sklearn_ndcg_score(
+    y_true=[relevance_scores],
+    y_score=[predicted_scores],
+    k=ndcg_k,
+)
+print(f"sklearn nDCG score: {sklearn_result:.3f}")
 
 # Print intermediate steps for clarity
 ranking_order = np.argsort(predicted_scores)[::-1]

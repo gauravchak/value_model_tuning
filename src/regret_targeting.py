@@ -75,7 +75,8 @@ def optimize_weights(
         regrets = []
         for j in range(T):
             ndcg = sklearn_ndcg_score(
-                [data[:, j][base_rankings[j]]], [data[:, j][current_ranking]]
+                y_true=[data[:, j][base_rankings[j]]],
+                y_score=[data[:, j][current_ranking]]
             )
             regrets.append(1 - ndcg)
 

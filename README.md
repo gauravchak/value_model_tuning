@@ -24,9 +24,12 @@ Key features:
 - Configurable learning rate and number of iterations
 - Outputs optimized weights for each task
 
+### Supports both Black-box and Explicit Optimizations
+[ndcg_targeting_v1.py](./src/ndcg_targeting_v1.py) uses a white-box optimization approach. 
+
 ## Regret Targeting 
 
-The `regret_targeting.py` script takes a different approach, optimizing weights to minimize regret - the difference between the optimal and actual selections. This can be useful for balancing multiple competing objectives.
+The [regret_targeting.py](./src/regret_targeting.py) script takes a different approach. For each task, it looks at the ranking to optimize that task. Then it defines regret as the nDCG between the optimized weights ranking and the per-rask optimal ranking. The script has been provided a target regret ratio/fraction between tasks, and it finds the weights that produce this regret. This can be useful for balancing multiple competing objectives.
 
 Key features:
 - Minimizes regret across multiple tasks

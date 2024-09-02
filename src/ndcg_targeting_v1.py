@@ -47,7 +47,8 @@ def optimize_weights(
         base_ranking = np.argsort(base_scores)[::-1]
         # print(f"  Top 3 indices: {base_ranking[:3]}")
 
-        # Compute nDCG for each task ignored
+        # Compute nDCG between ranking with each task ignored and the base
+        # ranking
         ndcgs = []
         for j in range(T):
             task_ignored_weights = weights.copy()
@@ -56,7 +57,9 @@ def optimize_weights(
             task_ignored_ranking = np.argsort(task_ignored_scores)[::-1]
             # print(f" Ignoring {j}:  Top 3 indices: {task_ignored_ranking[:3]}")
             ndcg = sklearn_ndcg_score(
-                [base_scores[base_ranking]], [base_scores[task_ignored_ranking]])
+                y_true=[base_scores[base_ranking]],
+                y_score=[base_scores[task_ignored_ranking]]
+            )
             ndcgs.append(ndcg)
 
         # Compute nDCG regrets
@@ -67,6 +70,10 @@ def optimize_weights(
 
         # Compute the difference and update weights
         diff = desired_ndcg_fractions - current_ndcg_fractions
+        # If the difference w.r.t. a task is positive, that means the current
+        # ndcg gap is less than desired. So we increase the weight for the task
+        # since we want to increase the change in rankings that happens when we
+        # zero-out the weight for that task.
         weights += learning_rate * diff
 
         # Ensure weights are non-negative and sum to 1
@@ -117,9 +124,9 @@ print("Initial weights:",
 optimized_weights = optimize_weights(
     data=data,
     desired_ndcg_fractions=desired_ndcg_fractions,
-    max_iterations=10,
-    learning_rate=0.1,
-    tolerance=1e-4,
+    max_iterations=300,
+    learning_rate=0.05,
+    tolerance=1e-5,
     verbose=1,
     initial_weights=initial_weights
 )
