@@ -12,6 +12,7 @@ import numpy as np
 from sklearn.metrics import ndcg_score as sklearn_ndcg_score
 
 
+# pylint: disable=W0621
 def optimize_weights(
     data: list[list[float]],
     desired_regret_fractions: list[float],
