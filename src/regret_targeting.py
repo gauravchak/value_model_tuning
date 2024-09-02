@@ -59,10 +59,10 @@ def optimize_weights(
       current and desired regret fractions is below the tolerance for all tasks.
     """
     data = np.array(data)
-    N, T = data.shape
+    N, num_tasks = data.shape
     regret_importances = np.array(regret_importances)
 
-    assert len(regret_importances) == T, (
+    assert len(regret_importances) == num_tasks, (
         "Number of tasks and desired regret fractions must match"
     )
     assert np.isclose(sum(regret_importances), 1), (
@@ -70,12 +70,12 @@ def optimize_weights(
     )
 
     if initial_weights is None:
-        weights = np.ones(T) / T  # Start with equal weights
+        weights = np.ones(num_tasks) / num_tasks  # Start with equal weights
     else:
         weights = np.array(initial_weights)
 
     # Compute base rankings for each task
-    base_rankings = [np.argsort(data[:, j])[::-1] for j in range(T)]
+    base_rankings = [np.argsort(data[:, j])[::-1] for j in range(num_tasks)]
 
     for iteration in range(max_iterations):
         # Compute current ranking
@@ -84,7 +84,7 @@ def optimize_weights(
 
         # Compute regrets (1 - ndcg) for each task
         regrets = []
-        for j in range(T):
+        for j in range(num_tasks):
             ndcg = sklearn_ndcg_score(
                 y_true=[data[:, j][base_rankings[j]]],
                 y_score=[data[:, j][current_ranking]]
