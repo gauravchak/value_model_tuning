@@ -1,7 +1,8 @@
 # value_model_tuning
-nDCG and regret based tools to find value model weights
 
-Value models (also known as multi-task fusion models) are a common component in modern recommender systems. They take estimates from the final ranking model for different tasks and combine them to create the final ranked list of recommendations.
+Modern recsys use value models but practitioners often find it hard to tune them. This repo contains two algorithms I've found to work well for this. Think of them as a steering wheel for a car. You don't want to just drive, you want to drive in a certain direction. These algorithms help you steer in the direction of your choosing.
+
+Value models (also known as multi-task fusion models) are a common component in modern recommender systems. They take estimates from the final ranking model for different tasks and combine them to create the final ranked list of recommendations. The main reason to use a value model is becasue the real business goal is not just to optimize for one point-wise task, but instead to optimize for a more complex objective, such as maximizing user engagement or revenue. The value model is a sort of surrogate or proxy for the real objective.
 
 For more background on value models in recommender systems, see:
 
