@@ -28,7 +28,7 @@ Key features:
 - Configurable learning rate and number of iterations
 - Outputs optimized weights for each task
 
-### How NDCG Targeting Works
+### How NDCG Gap Targeting Works
 
 1. **Base Ranking**: First, we compute a base ranking using all task weights:
 
@@ -38,9 +38,9 @@ Key features:
 
    ![Task-Ignored Ranking](images/Task_ignored_ranked_list.png)
 
-3. **NDCG Delta**: We calculate the NDCG difference between the base ranking and each task-ignored ranking. This delta represents the importance of each task.
+3. **NDCG gap**: We calculate the NDCG difference between the base ranking and each task-ignored ranking. This gap represents the importance of each task.
 
-4. **Optimization**: The algorithm adjusts weights to achieve desired NDCG deltas for each task, effectively tuning the importance of each component in the value model.
+4. **Optimization**: The algorithm adjusts weights to achieve desired NDCG gap ratios/fractions for each task, effectively tuning the importance of each component in the value model.
 
 ### Supports both Black-box and Explicit Optimizations
 
