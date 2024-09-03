@@ -107,7 +107,7 @@ def optimize_weights(
         # this, we need to increase the weight of this task. Upon doing
         # so, the regret for this task will decrease, and the weighted sum
         # of regrets will also decrease.
-        weights += learning_rate * gradient
+        weights *= (1 + learning_rate * gradient)
 
         # Ensure weights are non-negative and sum to 1
         weights = np.maximum(weights, 0)

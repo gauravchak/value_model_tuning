@@ -67,9 +67,9 @@ Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
   nDCGs for each task ignored: ['0.994', '0.990', '0.999', '0.999', '0.999']
-  Current fractions: ['0.296', '0.504', '0.069', '0.073', '0.059']
+  Current fractions: ['0.297', '0.504', '0.069', '0.072', '0.058']
   Desired fractions: ['0.300', '0.500', '0.070', '0.070', '0.060']
-Optimized weights: ['0.269', '0.354', '0.137', '0.143', '0.098']
+Optimized weights: ['0.269', '0.354', '0.137', '0.143', '0.097']
 ```
 
 ## Regret Targeting
@@ -105,10 +105,10 @@ python regret_targeting.py
 Initial weights: ['0.200', '0.200', '0.200', '0.200', '0.200']
 
 Final results:
-  Regrets for each task: ['0.101', '0.045', '0.050', '0.034', '0.029']
-  Current regret gaps: ['0.030', '0.023', '0.004', '0.002', '0.002']
+  Regrets for each task: ['0.084', '0.053', '0.054', '0.035', '0.029']
+  Current regret gaps: ['0.025', '0.026', '0.004', '0.002', '0.002']
 
-Optimized weights: ['0.500', '0.374', '0.058', '0.039', '0.029']
+Optimized weights: ['0.546', '0.355', '0.036', '0.032', '0.030']
 ```
 
 ## Usage

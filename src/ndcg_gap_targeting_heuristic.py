@@ -81,7 +81,7 @@ def optimize_weights(
         # ndcg gap is less than desired. So we increase the weight for the task
         # since we want to increase the change in rankings that happens when we
         # zero-out the weight for that task.
-        weights += learning_rate * diff
+        weights *= (1 + learning_rate * diff)
 
         # Ensure weights are non-negative and sum to 1
         weights = np.maximum(weights, 0)
